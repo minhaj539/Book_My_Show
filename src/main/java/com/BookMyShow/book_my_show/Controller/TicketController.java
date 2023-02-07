@@ -2,10 +2,7 @@ package com.BookMyShow.book_my_show.Controller;
 import com.BookMyShow.book_my_show.RequestDto.TicketRequestDto;
 import com.BookMyShow.book_my_show.Service.TicketService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/ticket")
@@ -19,7 +16,17 @@ public String bookTicket(@RequestBody TicketRequestDto ticketRequestDto) {
     try {
         return ticketService.bookTicket(ticketRequestDto);
     } catch (Exception e) {
-        throw new RuntimeException(e);
+       // throw new RuntimeException(e);
+        return e.getMessage();
+    }
+}
+@DeleteMapping("cancel")
+    public String cancelTicket(@RequestParam("id") int ticketId){
+    try {
+        return ticketService.cancelTicket(ticketId);
+    }
+    catch(Exception e){
+        return e.getMessage();
     }
 }
 }

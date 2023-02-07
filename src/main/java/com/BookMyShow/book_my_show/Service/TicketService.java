@@ -21,6 +21,8 @@ public class TicketService {
 
     @Autowired
     TicketRepository ticketRepository;
+    @Autowired
+    private ShowSeatRepository showSeatRepository;
 
     public String bookTicket(TicketRequestDto bookTicketRequestDto)throws Exception{
 
@@ -98,5 +100,30 @@ public class TicketService {
         ticketRepository.save(ticketEntity);
 
         return "Sucessfully created a ticket";
+    }
+
+    public String cancelTicket(int ticketId){
+        TicketEntity ticket=ticketRepository.findById(ticketId).get();
+        ShowEntity show=ticket.getShow();
+        List<ShowSeatEntity> bookeSeats=ticket.getBookedSeats();
+        List<ShowSeatEntity> showSeats=show.getListOfSeats();
+        for(ShowSeatEntity showSeat:showSeats){
+            for(ShowSeatEntity bookedSeat:bookeSeats){
+                if(showSeat.getSeatNo().equals(bookedSeat.getSeatNo())){
+                    showSeat.setBooked(false);
+                    showSeat.setTicket(null);
+                    showSeat.setBooked_at(null);
+                    showSeatRepository.save(showSeat);
+                }
+            }
+        }
+        show.setListOfSeats(showSeats);
+        showRepository.save(show);
+        ticket.setAmount(0);
+        ticket.setShow(null);
+        ticket.setAlloted_seats(null);
+        ticket.setBookedSeats(null);
+        ticketRepository.save(ticket);
+        return "cancelled successfully";
     }
 }

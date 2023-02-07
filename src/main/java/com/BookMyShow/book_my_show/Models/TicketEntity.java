@@ -29,10 +29,6 @@ public class TicketEntity {
     @JoinColumn
     private ShowEntity show;
 
-    @ManyToOne
-    @JoinColumn
-    private MovieEntity movie;
-
     @OneToMany(mappedBy = "ticket",cascade = CascadeType.ALL)
     private List<ShowSeatEntity> bookedSeats;
 }
